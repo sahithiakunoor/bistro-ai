@@ -1,0 +1,18 @@
+export const COLORS = {
+  primary: "#C8973A",
+  primaryDark: "#A0731E",
+  primaryLight: "#F5E6C8",
+  background: "#0F0F0F",
+  surface: "#1A1A1A",
+  surfaceElevated: "#242424",
+  border: "#2E2E2E",
+  text: "#FFFFFF",
+  textSecondary: "#A0A0A0",
+  textMuted: "#606060",
+  success: "#4CAF50",
+  error: "#FF4444",
+  badge: "#FF6B6B",
+  white: "#FFFFFF",
+  black: "#000000",
+  overlay: "rgba(0,0,0,0.7)",
+};
