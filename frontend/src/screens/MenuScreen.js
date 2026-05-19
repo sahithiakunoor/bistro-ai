@@ -47,6 +47,11 @@ export default function MenuScreen({ navigation }) {
           i.tags.some((t) => t.toLowerCase().includes(q))
       );
     }
+    // Exclude popular items from main list when showing the default view —
+    // they already appear in the pinned Popular section header.
+    if (!selectedCategory && !search.trim()) {
+      items = items.filter((i) => !i.popular);
+    }
     return items;
   }, [categories, selectedCategory, search]);
 
@@ -117,27 +122,22 @@ export default function MenuScreen({ navigation }) {
       </View>
 
       {/* Categories */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categories}
-      >
-        {allCategories.map((cat) => (
-          <CategoryPill
-            key={cat.id ?? "all"}
-            category={cat}
-            selected={selectedCategory === cat.id}
-            onPress={() => setSelectedCategory(cat.id)}
-          />
-        ))}
-      </ScrollView>
-
-      {/* Popular Section */}
-      {!search && !selectedCategory && popularItems.length > 0 && (
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>⭐ Popular Right Now</Text>
-        </View>
-      )}
+      <View style={styles.categoriesWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categories}
+        >
+          {allCategories.map((cat) => (
+            <CategoryPill
+              key={cat.id ?? "all"}
+              category={cat}
+              selected={selectedCategory === cat.id}
+              onPress={() => setSelectedCategory(cat.id)}
+            />
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Items */}
       <FlatList
@@ -155,6 +155,9 @@ export default function MenuScreen({ navigation }) {
         ListHeaderComponent={
           !search && !selectedCategory && popularItems.length > 0 ? (
             <View>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>⭐ Popular Right Now</Text>
+              </View>
               {popularItems.map((item) => (
                 <MenuItemCard key={item.id} item={item} />
               ))}
@@ -223,10 +226,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingVertical: 12,
   },
-  categories: { paddingHorizontal: 16, paddingBottom: 12 },
+  categoriesWrapper: { overflow: "visible" },
+  categories: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    gap: 8,
+  },
   sectionHeader: { paddingHorizontal: 16, paddingVertical: 10 },
   sectionTitle: { color: COLORS.textSecondary, fontSize: 14, fontWeight: "700" },
-  list: { paddingBottom: 32 },
+  list: { paddingTop: 4, paddingBottom: 100 },
   loadingText: { color: COLORS.textSecondary, marginTop: 12 },
   errorEmoji: { fontSize: 40 },
   errorText: { color: COLORS.text, fontSize: 18, fontWeight: "700" },

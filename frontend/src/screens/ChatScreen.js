@@ -47,7 +47,18 @@ export default function ChatScreen({ navigation }) {
           break;
         }
         case "remove_from_cart": {
-          removeItem(action.input.item_id);
+          const { item_id, quantity } = action.input;
+          if (quantity && quantity > 0) {
+            // Partial removal — get fresh state to avoid stale closure
+            const currentItem = useCartStore
+              .getState()
+              .items.find((i) => i.id === item_id);
+            if (currentItem) {
+              updateQuantity(item_id, Math.max(0, currentItem.quantity - quantity));
+            }
+          } else {
+            removeItem(item_id);
+          }
           break;
         }
         case "update_quantity": {

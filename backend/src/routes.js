@@ -22,10 +22,13 @@ router.post("/chat", async (req, res) => {
 
     const result = await processMessage(message.trim(), cartItems, history);
 
+    console.log("[actions]", JSON.stringify(result.actions, null, 2));
+
     res.json({
       success: true,
       message: result.message,
       actions: result.actions,
+      intent: result.intent,
     });
   } catch (err) {
     console.error("Chat error:", err.message);

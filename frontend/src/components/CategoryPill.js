@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
-    marginRight: 8,
     gap: 6,
   },
   pillSelected: {
@@ -43,6 +42,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   labelSelected: {
-    color: COLORS.background,
+    color: COLORS.white,
   },
 });

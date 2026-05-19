@@ -15,6 +15,13 @@ export const useChatStore = create((set, get) => ({
   error: null,
 
   sendMessage: async (userText, cartPayload, onAction) => {
+    // Compute history BEFORE adding the current user message — otherwise
+    // get().messages would include userMsg, causing it to appear in both
+    // the history and the sendMessage call, which doubles Gemini's intent.
+    const history = get()
+      .messages.filter((m) => m.id !== "welcome" && m.role !== "system")
+      .map((m) => ({ role: m.role, content: m.content }));
+
     const userMsg = {
       id: Date.now().toString(),
       role: "user",
@@ -24,10 +31,6 @@ export const useChatStore = create((set, get) => ({
     set((s) => ({ messages: [...s.messages, userMsg], loading: true, error: null }));
 
     try {
-      const history = get()
-        .messages.filter((m) => m.id !== "welcome" && m.role !== "system")
-        .map((m) => ({ role: m.role, content: m.content }));
-
       const res = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
